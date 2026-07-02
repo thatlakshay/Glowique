@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skincare Routine Finder | Glowique Skincare</title>
+  <meta name="description" content="Take our interactive skincare finder quiz. Get a dermatologist-backed morning and evening routine matching your skin type and concerns.">
+  <link rel="stylesheet" href="shared_style.css">
+  <link rel="icon" type="image/png" href="logo.png">
+  <style>
+    /* Quiz Container */
+    .quiz-section {
+      background: linear-gradient(180deg, var(--color-rose-light) 0%, var(--color-white) 100%);
+      min-height: calc(100vh - var(--header-height));
+      padding-top: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quiz-box {
+      background: var(--color-white);
+      border-radius: var(--border-radius);
+      border: 1px solid rgba(234, 220, 218, 0.5);
+      box-shadow: var(--shadow-medium);
+      max-width: 700px;
+      width: 90%;
+      padding: 4rem;
+      position: relative;
+      overflow: hidden;
+      min-height: 480px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Progress bar */
+    .progress-container {
+      width: 100%;
+      height: 4px;
+      background-color: var(--color-rose-light);
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--gradient-rose-gold);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* Question cards transitions */
+    .quiz-step {
+      display: none;
+      animation: slideIn 0.5s ease forwards;
+    }
+
+    .quiz-step.active {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .quiz-step h2 {
+      font-size: 2.2rem;
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
+
+    .quiz-step h2::after {
+      margin: 0.8rem 0 0;
+    }
+
+    .question-desc {
+      font-size: 0.95rem;
+      color: var(--color-charcoal-light);
+      margin-bottom: 2rem;
+    }
+
+    /* Quiz Options grid */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .option-btn {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: left;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--color-charcoal-light);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .option-btn strong {
+      font-size: 1.05rem;
+      color: var(--color-charcoal);
+    }
+
+    .option-btn:hover,
+    .option-btn.selected {
+      border-color: var(--color-rose);
+      background-color: var(--color-rose-light);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .option-btn.selected {
+      border-color: var(--color-rose-dark);
+      outline: 1px solid var(--color-rose-dark);
+    }
+
+    /* Navigation buttons */
+    .quiz-nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+    }
+
+    .quiz-step-indicator {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-rose-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Results section Specifics */
+    .result-container {
+      display: none;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    .result-container.active {
+      display: block;
+    }
+
+    .result-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .result-header h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-routine-badge {
+      background: var(--gradient-rose-gold);
+      color: var(--color-white);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+    }
+
+    .recommended-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .rec-card {
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      text-align: center;
+      background: var(--color-white);
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .rec-step-number {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--color-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .rec-img {
+      width: 70px;
+      height: 70px;
+      margin: 0.5rem auto;
+      object-fit: contain;
+    }
+
+    .rec-name {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      line-height: 1.3;
+      margin-bottom: 0.3rem;
+      height: 3.0rem; /* Fits exactly 2 lines at 1.3 line-height (1.15 * 1.3 * 2 = 2.99rem) */
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .rec-price {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* Result Checkout Area */
+    .result-checkout-box {
+      background: var(--color-offwhite);
+      border-radius: var(--border-radius);
+      padding: 2.5rem;
+      border: 1px solid rgba(234, 220, 218, 0.6);
+      text-align: center;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .original-price {
+      text-decoration: line-through;
+      color: var(--color-medium-grey);
+      font-size: 1.2rem;
+    }
+
+    .bundle-price {
+      color: var(--color-charcoal);
+      font-weight: 700;
+      font-size: 2rem;
+    }
+
+    .bundle-discount-badge {
+      background: #EBF8EE;
+      color: #27AE60;
+      border: 1px solid #C2F0D1;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .result-actions .btn {
+      padding: 1.2rem 2rem;
+      font-size: 0.8rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .quiz-section {
+        padding-top: 100px;
+        padding-bottom: 3rem;
+      }
+      .quiz-box {
+        padding: 2rem;
+        min-height: 480px;
+      }
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+      .recommended-grid {
+        grid-template-columns: 1fr;
+      }
+      .result-actions {
+        flex-direction: column;
+      }
+      .result-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container nav-container">
+      <a href="index.html" class="logo-link">
+        <img src="logo.png" alt="Glowique Logo" class="logo-img">
+        <span class="logo-text">GLOWIQUE</span>
+      </a>
+      
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="quiz.html" class="active">Routine Quiz</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="cart-icon-btn" aria-label="Open Routine Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-count">0</span>
+        </button>
+        <button class="mobile-menu-btn" aria-label="Toggle Menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- QUIZ CONTENT SECTION -->
+  <section class="quiz-section">
+    
+    <!-- QUIZ BOX -->
+    <div class="quiz-box" id="quiz-box-card">
+      <div class="progress-container">
+        <div class="progress-bar" id="quiz-progress"></div>
+      </div>
+      
+      <!-- STEP 1 -->
+      <div class="quiz-step active" data-step="1">
+        <h2>What is your skin type?</h2>
+        <p class="question-desc">Select the option that best describes how your skin feels throughout the day.</p>
+        <div class="options-grid">
+          <button class="option-btn" data-value="dry">
+            <strong>Dry Skin</strong>
+            <span>Feels tight, flakey, or rough. Craves deep hydration.</span>
+          </button>
+          <button class="option-btn" data-value="oily">
+            <strong>Oily Skin</strong>
+            <span>Shiny all over. Enlarged pores, prone to blackheads.</span>
+          </button>
+          <button class="option-btn" data-value="combination">
+            <strong>Combination Skin</strong>
+            <span>Shiny T-zone (forehead, nose, chin) but dry cheeks.</span>
+          </button>
+          <button class="option-btn" data-value="sensitive">
+            <strong>Sensitive Skin</strong>
+            <span>Prone to redness, burning, itching, or product reactions.</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="quiz-step" data-step="2">
+        <h2>What is your primary skin concern?</h2>
+        <p class="question-desc">Select the main goal you want your Glowique routine to target.</p>
+        <div class="options-grid">
+          <button class="option-btn" data-value="acne">
+            <strong>Acne & Blemishes</strong>
+            <span>Targeting active breakouts, clogged pores, or pimples.</span>
+          </button>
+          <button class="option-btn" data-value="glow">
+            <strong>Dullness & Dark Spots</strong>
+            <span>Aiming for brighter complexion and fading pigmentation.</span>
+          </button>
+          <button class="option-btn" data-value="dryness">
+            <strong>Dehydration & Roughness</strong>
+            <span>Wanting smooth skin texture and lock-in moisture.</span>
+          </button>
+          <button class="option-btn" data-value="aging">
+            <strong>Aging & Fine Lines</strong>
+            <span>Lifting skin sagging, wrinkles, and crow's feet.</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="quiz-step" data-step="3">
+        <h2>What is your daily sun exposure?</h2>
+        <p class="question-desc">This helps us customize your protective and barrier recovery steps.</p>
+        <div class="options-grid">
+          <button class="option-btn" data-value="low">
+            <strong>Minimal Exposure</strong>
+            <span>Mainly indoors. Under 1 hour in direct sunlight.</span>
+          </button>
+          <button class="option-btn" data-value="medium">
+            <strong>Moderate Exposure</strong>
+            <span>Daily commute, afternoon walk. 1 to 3 hours outside.</span>
+          </button>
+          <button class="option-btn" data-value="high">
+            <strong>High Exposure</strong>
+            <span>Frequent outdoor activities or direct field work.</span>
+          </button>
+          <button class="option-btn" data-value="extreme">
+            <strong>Extreme Exposure</strong>
+            <span>Highly active solar environments. 4+ hours daily.</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="quiz-step" data-step="4">
+        <h2>Your current routine complexity?</h2>
+        <p class="question-desc">Choose your comfort level with applying multiple skincare layers.</p>
+        <div class="options-grid">
+          <button class="option-btn" data-value="cleanser">
+            <strong>Cleanser Only</strong>
+            <span>Only wash my face. Ready to add basic layering.</span>
+          </button>
+          <button class="option-btn" data-value="basic">
+            <strong>Basic routine</strong>
+            <span>I use cleanser, moisturizer, and occasionally SPF.</span>
+          </button>
+          <button class="option-btn" data-value="advanced">
+            <strong>Advanced routine</strong>
+            <span>I layer serums, toners, creams, and exfoliators regularly.</span>
+          </button>
+          <button class="option-btn" data-value="none">
+            <strong>No set routine</strong>
+            <span>Just starting my skincare journey. Keep it simple!</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- FOOTER ACTIONS IN BOX -->
+      <div class="quiz-nav-row" id="quiz-nav-footer">
+        <button class="btn btn-outline" id="prev-step-btn" style="visibility: hidden;">Back</button>
+        <span class="quiz-step-indicator" id="step-indicator-text">Step 1 of 4</span>
+        <button class="btn btn-primary" id="next-step-btn" disabled>Next</button>
+      </div>
+
+    </div>
+
+    <!-- RESULT BOX CONTAINER -->
+    <div class="quiz-box result-container" id="quiz-results-card">
+      <div class="result-header">
+        <span class="result-routine-badge" id="recommended-routine-name">Acne Control Routine</span>
+        <h2>Your Custom Glowique Routine</h2>
+        <p style="max-width:550px; margin:0 auto;" id="recommended-routine-desc">Based on your skin profile, we recommend this science-backed 3-step routine. These formulations work in synergy to repair barrier health and target breakouts.</p>
+      </div>
+
+      <div class="recommended-grid" id="recommended-products-list">
+        <!-- Dynamically Rendered Recommended Products -->
+      </div>
+
+      <div class="result-checkout-box">
+        <div class="price-row">
+          <span class="bundle-discount-badge">Routine Deal -10% Off</span>
+          <span class="original-price" id="original-routine-price">Rs. 1,797</span>
+          <span class="bundle-price" id="bundle-routine-price">Rs. 1,617</span>
+        </div>
+        <div class="result-actions">
+          <button class="btn btn-outline" id="add-routine-cart-btn">Add Routine To Cart</button>
+          <button class="btn btn-primary" id="checkout-routine-whatsapp-btn">Order Routine via WhatsApp</button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- CART OVERLAY & PANEL -->
+  <div class="cart-overlay">
+    <div class="cart-panel">
+      <div class="cart-header">
+        <h3>My Skincare Routine</h3>
+        <button class="cart-close-btn" aria-label="Close Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="cart-items-container">
+        <!-- Rendered by shared_script.js -->
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total-row">
+          <span>Subtotal</span>
+          <span id="cart-total-value">Rs. 0</span>
+        </div>
+        <button class="btn btn-secondary cart-checkout-btn" onclick="checkoutCart()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4-4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Order Routine on WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING WHATSAPP BUTTON -->
+  <a href="https://wa.me/918837741698?text=Hello%20Glowique!%20I%20have%20a%20skincare%20query%20and%20would%20like%20a%20dermatological%20consultation." target="_blank" class="whatsapp-float" aria-label="Chat on WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.793 1.451 5.48.002 9.938-4.438 9.941-9.923.001-2.656-1.03-5.153-2.903-7.03C16.586 1.777 14.09 .746 11.432.746 5.952.746 1.493 5.186 1.491 10.672c-.001 1.673.456 3.305 1.321 4.733l-.979 3.578 3.673-.96c1.5.819 3.018 1.25 4.542 1.251zm12.39-7.25c-.267-.134-1.586-.783-1.831-.873-.247-.089-.427-.134-.607.134-.18.269-.697.873-.854 1.05-.157.18-.314.202-.581.069-.267-.134-1.13-.417-2.153-1.331-.795-.709-1.332-1.584-1.488-1.853-.157-.269-.017-.414.118-.548.121-.12.267-.313.4-.469.134-.156.179-.268.268-.447.09-.179.045-.335-.022-.469-.067-.134-.607-1.46-.831-2.001-.219-.527-.459-.456-.607-.464-.157-.008-.337-.01-.517-.01-.18 0-.472.067-.719.336-.247.269-.944.923-.944 2.253s.966 2.613 1.101 2.793c.135.18 1.901 2.903 4.606 4.069.643.277 1.144.443 1.536.567.646.206 1.233.177 1.697.108.518-.077 1.586-.649 1.81-.1278.225-.63.225-1.168.157-1.257-.067-.09-.247-.135-.515-.269z"/></a >
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-about">
+        <a href="index.html" class="footer-logo">
+          <img src="logo.png" alt="Glowique Logo" style="height: 40px; width: 40px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(184, 123, 109, 0.4);">
+          <span class="logo-text" style="color: var(--color-white); margin-left: 0.5rem;">GLOWIQUE</span>
+        </a>
+        <p>Premium, dermatologist-backed skincare crafted for ultimate skin health. Experience medical-grade efficacy wrapped in clean beauty aesthetics.</p>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="Facebook">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" class="social-icon" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="#" class="social-icon" aria-label="Twitter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+          </a>
+        </div>
+      </div>
+      
+      <div>
+        <h3 class="footer-heading">Shop</h3>
+        <ul class="footer-links">
+          <li><a href="shop.html?category=Cleanser">Cleansers</a></li>
+          <li><a href="shop.html?category=Serum">Serums</a></li>
+          <li><a href="shop.html?category=Moisturizer">Moisturizers</a></li>
+          <li><a href="shop.html?category=Sunscreen">Sunscreens</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="footer-heading">Discover</h3>
+        <ul class="footer-links">
+          <li><a href="about.html">Our Philosophy</a></li>
+          <li><a href="quiz.html">Routine Finder Quiz</a></li>
+          <li><a href="about.html#science">Ingredient Science</a></li>
+          <li><a href="contact.html">Customer Care</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="footer-heading">Contact Info</h3>
+        <ul class="footer-contact">
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>+91 88377 41698</span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>hello@glowique.com</span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg>
+            <span>Chandigarh, India</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="container footer-bottom">
+      <p>&copy; 2026 Glowique Skincare. All rights reserved.</p>
+      <p>Clean science. Ultimate radiance.</p>
+    </div>
+  </footer>
+
+  <script src="shared_script.js"></script>
+  <script>
+    const totalSteps = 4;
+    let currentStep = 1;
+    const answers = {};
+    let recommendedRoutine = [];
+
+    // Routines database based on concerns/types
+    const routines = {
+      'acne': {
+        name: "Blemish Control Routine",
+        desc: "Formulated specifically to clear congested pores, regulate excess sebum production, and eliminate active breakouts without drying the skin barrier.",
+        products: [1, 5, 6] // Cleanser, Toner, Peel
+      },
+      'glow': {
+        name: "Radiant Glow Routine",
+        desc: "Ideal for fading pigmentation, evening out dull patches, and revealing a brilliant, lit-from-within glow using Vitamin C and Niacinamide synergies.",
+        products: [1, 3, 2] // Cleanser, Serum, Gel
+      },
+      'dryness': {
+        name: "Deep Hydration Routine",
+        desc: "Calibrated to replenish dry skin tissues, soothe flakey patches, and establish a multi-layered lipid seal to stop moisture evaporation.",
+        products: [1, 5, 2] // Cleanser, Toner, Gel
+      },
+      'aging': {
+        name: "Peptide Lift & Renew Routine",
+        desc: "Targeted cellular firming morning and night. Rebuilds deep collagen networks, fills structural expression lines, and reduces eye fatigue puffiness.",
+        products: [3, 7, 2] // Serum, Eye Cream, Gel
+      }
+    };
+
+    function updateStep() {
+      // Hide all steps
+      document.querySelectorAll('.quiz-step').forEach(step => step.classList.remove('active'));
+      
+      // Show active step
+      const activeEl = document.querySelector(`.quiz-step[data-step="${currentStep}"]`);
+      if (activeEl) activeEl.classList.add('active');
+
+      // Update progress bar
+      const progressPercent = ((currentStep - 1) / totalSteps) * 100;
+      document.getElementById('quiz-progress').style.width = `${progressPercent}%`;
+
+      // Update navigation elements
+      const prevBtn = document.getElementById('prev-step-btn');
+      const nextBtn = document.getElementById('next-step-btn');
+      const indicator = document.getElementById('step-indicator-text');
+
+      indicator.textContent = `Step ${currentStep} of ${totalSteps}`;
+      prevBtn.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+
+      // Check if current step has a selection to enable next button
+      const stepVal = answers[currentStep];
+      if (stepVal) {
+        nextBtn.disabled = false;
+        nextBtn.textContent = currentStep === totalSteps ? 'See Results' : 'Next';
+        
+        // Mark selected button
+        const activeStepEl = document.querySelector(`.quiz-step[data-step="${currentStep}"]`);
+        activeStepEl.querySelectorAll('.option-btn').forEach(btn => {
+          if (btn.getAttribute('data-value') === stepVal) {
+            btn.classList.add('selected');
+          } else {
+            btn.classList.remove('selected');
+          }
+        });
+      } else {
+        nextBtn.disabled = true;
+        nextBtn.textContent = 'Next';
+      }
+    }
+
+    function calculateResults() {
+      const concern = answers[2] || 'glow'; // Primary decider is Concern
+      const selectedRoutine = routines[concern] || routines['glow'];
+      
+      // Load products details
+      recommendedRoutine = selectedRoutine.products.map(id => products.find(p => p.id === id));
+      
+      // Render Details
+      document.getElementById('recommended-routine-name').textContent = selectedRoutine.name;
+      document.getElementById('recommended-routine-desc').textContent = selectedRoutine.desc;
+
+      // Render product grid
+      const productsList = document.getElementById('recommended-products-list');
+      productsList.innerHTML = recommendedRoutine.map((item, index) => `
+        <div class="rec-card">
+          <div class="rec-step-number">Step 0${index + 1}</div>
+          <img src="${item.img}" alt="${item.name}" class="rec-img">
+          <h4 class="rec-name">${item.name}</h4>
+          <div class="rec-price">Rs. ${item.price}</div>
+        </div>
+      `).join('');
+
+      // Calculate prices
+      const subtotal = recommendedRoutine.reduce((sum, item) => sum + item.price, 0);
+      const discounted = Math.round(subtotal * 0.9); // 10% off
+
+      document.getElementById('original-routine-price').textContent = `Rs. ${subtotal}`;
+      document.getElementById('bundle-routine-price').textContent = `Rs. ${discounted}`;
+
+      // Show Result Card, Hide Quiz Box
+      document.getElementById('quiz-box-card').style.display = 'none';
+      
+      const resultsCard = document.getElementById('quiz-results-card');
+      resultsCard.classList.add('active');
+      
+      // Bind Result Buttons
+      document.getElementById('add-routine-cart-btn').onclick = () => {
+        recommendedRoutine.forEach(item => {
+          // Add to cart one by one
+          const existing = cart.find(cartItem => cartItem.id === item.id);
+          if (existing) {
+            existing.quantity += 1;
+          } else {
+            cart.push({ ...item, quantity: 1 });
+          }
+        });
+        saveCart();
+        openCartPanel();
+      };
+
+      document.getElementById('checkout-routine-whatsapp-btn').onclick = () => {
+        let text = `Hello Glowique!\n\nI just took the Routine Finder Quiz and got matched with the *${selectedRoutine.name}*!\n\nI would like to order the complete routine bundle at the discounted price:\n`;
+        recommendedRoutine.forEach((item, index) => {
+          text += `Step 0${index + 1}: *${item.name}* (Rs. ${item.price})\n`;
+        });
+        text += `\nSubtotal: Rs. ${subtotal}\n*Special Bundle Price (-10%): Rs. ${discounted}*\n\nPlease confirm shipping details and payment options!`;
+        
+        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+      };
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Bind option clicks
+      document.querySelectorAll('.quiz-step').forEach(stepEl => {
+        const stepNum = parseInt(stepEl.getAttribute('data-step'));
+        stepEl.querySelectorAll('.option-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            // Save answer
+            answers[stepNum] = btn.getAttribute('data-value');
+            
+            // Mark selected style
+            stepEl.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+
+            // Enable next button
+            document.getElementById('next-step-btn').disabled = false;
+            
+            // Auto advance after short delay for better interactive experience
+            setTimeout(() => {
+              if (currentStep < totalSteps) {
+                currentStep += 1;
+                updateStep();
+              } else {
+                calculateResults();
+              }
+            }, 300);
+          });
+        });
+      });
+
+      // Bind nav buttons
+      document.getElementById('prev-step-btn').addEventListener('click', () => {
+        if (currentStep > 1) {
+          currentStep -= 1;
+          updateStep();
+        }
+      });
+
+      document.getElementById('next-step-btn').addEventListener('click', () => {
+        if (currentStep < totalSteps) {
+          currentStep += 1;
+          updateStep();
+        } else {
+          calculateResults();
+        }
+      });
+
+      updateStep();
+    });
+  </script>
+</body>
+</html>

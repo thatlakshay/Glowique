@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Collection | Glowique Skincare</title>
+  <meta name="description" content="Browse our complete medical-grade clean skincare collection. Face washes, moisturizers, active serums, mineral sunscreens, and treatments.">
+  <link rel="stylesheet" href="shared_style.css">
+  <link rel="icon" type="image/png" href="logo.png">
+  <style>
+    /* Shop Header Banner */
+    .shop-header {
+      background: linear-gradient(180deg, var(--color-rose-light) 0%, var(--color-white) 100%);
+      padding: 100px 0 50px;
+      text-align: center;
+      border-bottom: 1px solid rgba(234, 220, 218, 0.4);
+    }
+    
+    .shop-header h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .shop-header p {
+      font-size: 1.1rem;
+      color: var(--color-rose-dark);
+      letter-spacing: 0.05em;
+    }
+
+    /* Shop Content Layout */
+    .shop-layout {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 3rem;
+      margin-top: 3rem;
+    }
+
+    /* Sidebar Filters */
+    .filter-sidebar {
+      position: sticky;
+      top: 110px;
+      height: fit-content;
+    }
+
+    .filter-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .filter-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--color-charcoal);
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .filter-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .filter-item button {
+      background: none;
+      border: none;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--color-charcoal-light);
+      cursor: pointer;
+      padding: 0.2rem 0;
+      transition: var(--transition);
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      text-align: left;
+    }
+
+    .filter-item button:hover,
+    .filter-item.active button {
+      color: var(--color-rose-dark);
+      font-weight: 600;
+      padding-left: 5px;
+    }
+
+    .filter-count {
+      color: var(--color-rose);
+      font-weight: 400;
+      font-size: 0.8rem;
+    }
+
+    /* Products Grid Area */
+    .shop-products {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .shop-results-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(234, 220, 218, 0.3);
+      font-size: 0.9rem;
+      color: var(--color-charcoal-light);
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    /* Quick View Modal styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(26, 27, 29, 0.45);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-container {
+      background: var(--color-white);
+      border-radius: var(--border-radius);
+      max-width: 800px;
+      width: 90%;
+      padding: 3rem;
+      position: relative;
+      box-shadow: var(--shadow-medium);
+      transform: translateY(30px);
+      transition: var(--transition);
+    }
+
+    .modal-overlay.open .modal-container {
+      transform: translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-charcoal);
+      transition: var(--transition);
+    }
+
+    .modal-close:hover {
+      transform: rotate(90deg);
+      color: var(--color-rose-dark);
+    }
+
+    .modal-content {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .modal-img-wrapper {
+      background: var(--color-rose-light);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: contain;
+    }
+
+    .modal-details h3 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-price {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--color-charcoal);
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-desc {
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      color: var(--color-charcoal-light);
+    }
+
+    .modal-meta-row {
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .modal-meta-row strong {
+      color: var(--color-charcoal);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .modal-actions .btn {
+      flex: 1;
+    }
+
+    /* Responsiveness */
+    @media (max-width: 1024px) {
+      .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .shop-layout {
+        grid-template-columns: 1fr;
+      }
+      .filter-sidebar {
+        position: relative;
+        top: 0;
+        margin-bottom: 2rem;
+      }
+      .filter-section {
+        margin-bottom: 1.5rem;
+      }
+      .grid-container {
+        grid-template-columns: 1fr;
+      }
+      .modal-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .modal-container {
+        padding: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container nav-container">
+      <a href="index.html" class="logo-link">
+        <img src="logo.png" alt="Glowique Logo" class="logo-img">
+        <span class="logo-text">GLOWIQUE</span>
+      </a>
+      
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="shop.html" class="active">Shop</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="quiz.html">Routine Quiz</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="cart-icon-btn" aria-label="Open Routine Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-count">0</span>
+        </button>
+        <button class="mobile-menu-btn" aria-label="Toggle Menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- SHOP HEADER BANNER -->
+  <section class="shop-header">
+    <div class="container">
+      <h1>The Glowique Collection</h1>
+      <p>Clean Formulation. Clinical Results.</p>
+    </div>
+  </section>
+
+  <!-- SHOP MAIN CONTAINER -->
+  <main class="container section-padding" style="padding-top: 3rem;">
+    <div class="shop-layout">
+      
+      <!-- SIDEBAR FILTERS -->
+      <aside class="filter-sidebar">
+        
+        <!-- Category Filter -->
+        <div class="filter-section">
+          <h3 class="filter-title">Category</h3>
+          <ul class="filter-list" id="category-filters">
+            <li class="filter-item active" data-filter="all">
+              <button>All Products <span class="filter-count" id="count-all">0</span></button>
+            </li>
+            <li class="filter-item" data-filter="Cleanser">
+              <button>Cleanser <span class="filter-count" id="count-cleanser">0</span></button>
+            </li>
+            <li class="filter-item" data-filter="Toner">
+              <button>Toner <span class="filter-count" id="count-toner">0</span></button>
+            </li>
+            <li class="filter-item" data-filter="Serum">
+              <button>Serum <span class="filter-count" id="count-serum">0</span></button>
+            </li>
+            <li class="filter-item" data-filter="Moisturizer">
+              <button>Moisturizer <span class="filter-count" id="count-moisturizer">0</span></button>
+            </li>
+            <li class="filter-item" data-filter="Sunscreen">
+              <button>Sunscreen <span class="filter-count" id="count-sunscreen">0</span></button>
+            </li>
+            <li class="filter-item" data-filter="Exfoliator">
+              <button>Treatments <span class="filter-count" id="count-exfoliator">0</span></button>
+            </li>
+            <li class="filter-item" data-filter="Eye Cream">
+              <button>Eye Care <span class="filter-count" id="count-eye">0</span></button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Skin Concern Filter -->
+        <div class="filter-section">
+          <h3 class="filter-title">Skin Concern</h3>
+          <ul class="filter-list" id="concern-filters">
+            <li class="filter-item active" data-concern="all">
+              <button>All Concerns</button>
+            </li>
+            <li class="filter-item" data-concern="Acne">
+              <button>Acne & Pores</button>
+            </li>
+            <li class="filter-item" data-concern="Glow">
+              <button>Dullness & Glow</button>
+            </li>
+            <li class="filter-item" data-concern="Dryness">
+              <button>Hydration & Dryness</button>
+            </li>
+            <li class="filter-item" data-concern="Aging">
+              <button>Fine Lines & Anti-Aging</button>
+            </li>
+          </ul>
+        </div>
+
+      </aside>
+
+      <!-- PRODUCTS AREA -->
+      <section class="shop-products">
+        <div class="shop-results-bar">
+          <span id="results-text">Showing all products</span>
+          <span style="font-size:0.8rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--color-rose-dark);">WhatsApp Orders Direct Delivery</span>
+        </div>
+        
+        <div class="grid-container" id="products-grid-container">
+          <!-- Rendered Dynamically by javascript -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- QUICK VIEW MODAL -->
+  <div class="modal-overlay" id="quickview-modal">
+    <div class="modal-container">
+      <button class="modal-close" id="modal-close-btn" aria-label="Close modal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <div class="modal-content" id="modal-content-details">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- CART OVERLAY & PANEL -->
+  <div class="cart-overlay">
+    <div class="cart-panel">
+      <div class="cart-header">
+        <h3>My Skincare Routine</h3>
+        <button class="cart-close-btn" aria-label="Close Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="cart-items-container">
+        <!-- Rendered by shared_script.js -->
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total-row">
+          <span>Subtotal</span>
+          <span id="cart-total-value">Rs. 0</span>
+        </div>
+        <button class="btn btn-secondary cart-checkout-btn" onclick="checkoutCart()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4-4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Order Routine on WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING WHATSAPP BUTTON -->
+  <a href="https://wa.me/918837741698?text=Hello%20Glowique!%20I%20have%20a%20skincare%20query%20and%20would%20like%20a%20dermatological%20consultation." target="_blank" class="whatsapp-float" aria-label="Chat on WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.793 1.451 5.48.002 9.938-4.438 9.941-9.923.001-2.656-1.03-5.153-2.903-7.03C16.586 1.777 14.09 .746 11.432.746 5.952.746 1.493 5.186 1.491 10.672c-.001 1.673.456 3.305 1.321 4.733l-.979 3.578 3.673-.96c1.5.819 3.018 1.25 4.542 1.251zm12.39-7.25c-.267-.134-1.586-.783-1.831-.873-.247-.089-.427-.134-.607.134-.18.269-.697.873-.854 1.05-.157.18-.314.202-.581.069-.267-.134-1.13-.417-2.153-1.331-.795-.709-1.332-1.584-1.488-1.853-.157-.269-.017-.414.118-.548.121-.12.267-.313.4-.469.134-.156.179-.268.268-.447.09-.179.045-.335-.022-.469-.067-.134-.607-1.46-.831-2.001-.219-.527-.459-.456-.607-.464-.157-.008-.337-.01-.517-.01-.18 0-.472.067-.719.336-.247.269-.944.923-.944 2.253s.966 2.613 1.101 2.793c.135.18 1.901 2.903 4.606 4.069.643.277 1.144.443 1.536.567.646.206 1.233.177 1.697.108.518-.077 1.586-.649 1.81-.1278.225-.63.225-1.168.157-1.257-.067-.09-.247-.135-.515-.269z"/></a >
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-about">
+        <a href="index.html" class="footer-logo">
+          <img src="logo.png" alt="Glowique Logo" style="height: 40px; width: 40px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(184, 123, 109, 0.4);">
+          <span class="logo-text" style="color: var(--color-white); margin-left: 0.5rem;">GLOWIQUE</span>
+        </a>
+        <p>Premium, dermatologist-backed skincare crafted for ultimate skin health. Experience medical-grade efficacy wrapped in clean beauty aesthetics.</p>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="Facebook">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" class="social-icon" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="#" class="social-icon" aria-label="Twitter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+          </a>
+        </div>
+      </div>
+      
+      <div>
+        <h3 class="footer-heading">Shop</h3>
+        <ul class="footer-links">
+          <li><a href="shop.html?category=Cleanser">Cleansers</a></li>
+          <li><a href="shop.html?category=Serum">Serums</a></li>
+          <li><a href="shop.html?category=Moisturizer">Moisturizers</a></li>
+          <li><a href="shop.html?category=Sunscreen">Sunscreens</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="footer-heading">Discover</h3>
+        <ul class="footer-links">
+          <li><a href="about.html">Our Philosophy</a></li>
+          <li><a href="quiz.html">Routine Finder Quiz</a></li>
+          <li><a href="about.html#science">Ingredient Science</a></li>
+          <li><a href="contact.html">Customer Care</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="footer-heading">Contact Info</h3>
+        <ul class="footer-contact">
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>+91 88377 41698</span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>hello@glowique.com</span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg>
+            <span>Chandigarh, India</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="container footer-bottom">
+      <p>&copy; 2026 Glowique Skincare. All rights reserved.</p>
+      <p>Clean science. Ultimate radiance.</p>
+    </div>
+  </footer>
+
+  <script src="shared_script.js"></script>
+  <script>
+    let activeFilter = 'all';
+    let activeConcern = 'all';
+
+    // Map concerns to products
+    const concernMap = {
+      'Acne': [2, 5, 6],       // Gel, Toner, Peel
+      'Glow': [3, 5, 6],       // Serum, Toner, Peel
+      'Dryness': [1, 2, 4],    // Cleanser, Gel, Sunscreen
+      'Aging': [3, 7]          // Serum, Eye Cream
+    };
+
+    function renderProducts() {
+      const container = document.getElementById('products-grid-container');
+      const resultsText = document.getElementById('results-text');
+      if (!container) return;
+
+      // Filter products
+      let filtered = products;
+
+      // Category filter
+      if (activeFilter !== 'all') {
+        filtered = filtered.filter(p => p.category === activeFilter);
+      }
+
+      // Concern filter
+      if (activeConcern !== 'all') {
+        const allowedIds = concernMap[activeConcern] || [];
+        filtered = filtered.filter(p => allowedIds.includes(p.id));
+      }
+
+      resultsText.textContent = `Showing ${filtered.length} product${filtered.length === 1 ? '' : 's'}`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 5rem 0;">
+            <p>No products match your active filters.</p>
+            <button class="btn btn-outline" onclick="resetFilters()" style="margin-top:1.5rem;">Reset Filters</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => `
+        <div class="product-card fade-in appear" style="animation: fadeIn 0.5s ease;">
+          <div class="product-img-container" onclick="openQuickView(${item.id})">
+            <span class="product-badge">${item.tag}</span>
+            <img src="${item.img}" alt="${item.name}" class="product-img">
+          </div>
+          <div class="product-info">
+            <div class="product-rating">
+              ${Array.from({ length: 5 }).map((_, i) => `<span>${i < item.rating ? '★' : '☆'}</span>`).join('')}
+            </div>
+            <h3 class="product-title" onclick="openQuickView(${item.id})" style="cursor:pointer;">${item.name}</h3>
+            <div class="product-ingredients">${item.ingredients}</div>
+            <div class="product-price">Rs. ${item.price}</div>
+            <div class="product-actions">
+              <button class="btn btn-outline" onclick="addToCart(${item.id})">Add to Routine</button>
+              <button class="btn btn-primary" onclick="orderSingle(${item.id})">Order</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateSidebarCount() {
+      // All count
+      document.getElementById('count-all').textContent = products.length;
+      
+      // Category counts
+      document.getElementById('count-cleanser').textContent = products.filter(p => p.category === 'Cleanser').length;
+      document.getElementById('count-toner').textContent = products.filter(p => p.category === 'Toner').length;
+      document.getElementById('count-serum').textContent = products.filter(p => p.category === 'Serum').length;
+      document.getElementById('count-moisturizer').textContent = products.filter(p => p.category === 'Moisturizer').length;
+      document.getElementById('count-sunscreen').textContent = products.filter(p => p.category === 'Sunscreen').length;
+      document.getElementById('count-exfoliator').textContent = products.filter(p => p.category === 'Exfoliator').length;
+      document.getElementById('count-eye').textContent = products.filter(p => p.category === 'Eye Cream').length;
+    }
+
+    function resetFilters() {
+      activeFilter = 'all';
+      activeConcern = 'all';
+      
+      // Update UI active states
+      document.querySelectorAll('#category-filters .filter-item').forEach(el => el.classList.remove('active'));
+      document.querySelector('#category-filters [data-filter="all"]').classList.add('active');
+
+      document.querySelectorAll('#concern-filters .filter-item').forEach(el => el.classList.remove('active'));
+      document.querySelector('#concern-filters [data-concern="all"]').classList.add('active');
+
+      renderProducts();
+    }
+
+    /* --- QUICK VIEW MODAL LOGIC --- */
+    function openQuickView(id) {
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+
+      const modal = document.getElementById('quickview-modal');
+      const details = document.getElementById('modal-content-details');
+
+      details.innerHTML = `
+        <div class="modal-img-wrapper">
+          <img src="${product.img}" alt="${product.name}" class="modal-img">
+        </div>
+        <div class="modal-details">
+          <h3>${product.name}</h3>
+          <div class="product-rating" style="margin-bottom:1rem;">
+            ${Array.from({ length: 5 }).map((_, i) => `<span>${i < product.rating ? '★' : '☆'}</span>`).join('')}
+          </div>
+          <div class="modal-price">Rs. ${product.price}</div>
+          <p class="modal-desc">${product.desc}</p>
+          <div class="modal-meta-row">
+            <strong>Active Ingredients:</strong> ${product.ingredients}
+          </div>
+          <div class="modal-meta-row">
+            <strong>Category:</strong> ${product.category}
+          </div>
+          <div class="modal-meta-row">
+            <strong>Skin Compatibility:</strong> Dermatologist Formulated for All Skin Types
+          </div>
+          <div class="modal-actions">
+            <button class="btn btn-outline" onclick="addToCart(${product.id}); closeQuickView();">Add to Routine</button>
+            <button class="btn btn-primary" onclick="orderSingle(${product.id}); closeQuickView();">Order via WhatsApp</button>
+          </div>
+        </div>
+      `;
+
+      modal.classList.add('open');
+    }
+
+    function closeQuickView() {
+      const modal = document.getElementById('quickview-modal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Read query params for category direct links
+      const urlParams = new URLSearchParams(window.location.search);
+      const catParam = urlParams.get('category');
+      const concernParam = urlParams.get('concern');
+
+      if (catParam) {
+        activeFilter = catParam;
+        document.querySelectorAll('#category-filters .filter-item').forEach(el => {
+          if (el.getAttribute('data-filter') === catParam) {
+            el.classList.add('active');
+          } else {
+            el.classList.remove('active');
+          }
+        });
+      }
+
+      if (concernParam) {
+        activeConcern = concernParam;
+        document.querySelectorAll('#concern-filters .filter-item').forEach(el => {
+          if (el.getAttribute('data-concern') === concernParam) {
+            el.classList.add('active');
+          } else {
+            el.classList.remove('active');
+          }
+        });
+      }
+
+      updateSidebarCount();
+      renderProducts();
+
+      // Bind filter clicks
+      document.querySelectorAll('#category-filters .filter-item').forEach(el => {
+        el.addEventListener('click', () => {
+          document.querySelectorAll('#category-filters .filter-item').forEach(item => item.classList.remove('active'));
+          el.classList.add('active');
+          activeFilter = el.getAttribute('data-filter');
+          renderProducts();
+        });
+      });
+
+      document.querySelectorAll('#concern-filters .filter-item').forEach(el => {
+        el.addEventListener('click', () => {
+          document.querySelectorAll('#concern-filters .filter-item').forEach(item => item.classList.remove('active'));
+          el.classList.add('active');
+          activeConcern = el.getAttribute('data-concern');
+          renderProducts();
+        });
+      });
+
+      // Bind modal close
+      const modal = document.getElementById('quickview-modal');
+      const modalClose = document.getElementById('modal-close-btn');
+      if (modalClose) {
+        modalClose.addEventListener('click', closeQuickView);
+      }
+      if (modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) closeQuickView();
+        });
+      }
+    });
+  </script>
+</body>
+</html>

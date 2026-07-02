@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Philosophy & Science | Glowique Skincare</title>
+  <meta name="description" content="Discover the science of Glowique. We formulate clean, medical-grade, dermatologist-backed skincare products utilizing active, clinically proven ingredients.">
+  <link rel="stylesheet" href="shared_style.css">
+  <link rel="icon" type="image/png" href="logo.png">
+  <style>
+    /* About Banner */
+    .about-hero {
+      background: linear-gradient(180deg, var(--color-rose-light) 0%, var(--color-white) 100%);
+      padding: 120px 0 60px;
+      text-align: center;
+      border-bottom: 1px solid rgba(234, 220, 218, 0.4);
+    }
+
+    .about-hero h1 {
+      font-size: 3.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-hero p {
+      font-size: 1.25rem;
+      max-width: 700px;
+      margin: 0 auto;
+      color: var(--color-rose-dark);
+      font-weight: 300;
+    }
+
+    /* Science Story section */
+    .story-section {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .story-text h2 {
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
+
+    .story-text h2::after {
+      margin: 0.8rem 0 0;
+    }
+
+    .story-text p {
+      margin-bottom: 1.5rem;
+      font-size: 1.05rem;
+    }
+
+    .story-img-container {
+      background: var(--gradient-rose-gold);
+      padding: 5px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-medium);
+    }
+
+    .story-img-wrapper {
+      background: var(--color-white);
+      border-radius: calc(var(--border-radius) - 3px);
+      padding: 4rem 3rem;
+      text-align: center;
+    }
+
+    .science-graphic-logo {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid rgba(184, 123, 109, 0.4);
+      box-shadow: 0 4px 15px rgba(26, 27, 29, 0.08);
+      margin: 0 auto 2rem;
+      animation: rotateSlow 20s infinite linear;
+    }
+
+    @keyframes rotateSlow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .story-img-wrapper h3 {
+      font-size: 2rem;
+      color: var(--color-rose-dark);
+      margin-bottom: 1rem;
+    }
+
+    /* Ingredients Focus section */
+    .ingredients-focus {
+      background-color: var(--color-offwhite);
+    }
+
+    .ingredients-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      margin-top: 4rem;
+    }
+
+    .ingredient-card {
+      background: var(--color-white);
+      border: 1px solid rgba(234, 220, 218, 0.4);
+      border-radius: var(--border-radius);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition);
+    }
+
+    .ingredient-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-medium);
+      border-color: var(--color-gold);
+    }
+
+    .ingredient-formula {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--color-gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .ingredient-name {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-charcoal);
+    }
+
+    .ingredient-card p {
+      font-size: 0.85rem;
+      color: var(--color-charcoal-light);
+    }
+
+    /* Commitments & Certification */
+    .commitments-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3rem;
+      margin-top: 4rem;
+      text-align: center;
+    }
+
+    .commitment-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--color-rose-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      color: var(--color-rose-dark);
+      border: 1px solid var(--color-border);
+    }
+
+    .commitment-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .commitment-desc {
+      font-size: 0.85rem;
+      color: var(--color-charcoal-light);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .story-section {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .ingredients-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .commitments-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .about-hero h1 { font-size: 2.8rem; }
+      .ingredients-grid {
+        grid-template-columns: 1fr;
+      }
+      .commitments-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container nav-container">
+      <a href="index.html" class="logo-link">
+        <img src="logo.png" alt="Glowique Logo" class="logo-img">
+        <span class="logo-text">GLOWIQUE</span>
+      </a>
+      
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="about.html" class="active">About Us</a></li>
+          <li><a href="quiz.html">Routine Quiz</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="cart-icon-btn" aria-label="Open Routine Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-count">0</span>
+        </button>
+        <button class="mobile-menu-btn" aria-label="Toggle Menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ABOUT HERO BANNER -->
+  <section class="about-hero">
+    <div class="container">
+      <h1 class="fade-in">Our Philosophy</h1>
+      <p class="fade-in" style="transition-delay: 0.2s;">Glowique is built on the intersection of dermatological science and clean botanical luxury.</p>
+    </div>
+  </section>
+
+  <!-- THE STORY OF GLOW -->
+  <section class="container section-padding">
+    <div class="story-section">
+      <div class="story-text fade-in">
+        <h2 id="science">The Science of Glow</h2>
+        <p>At Glowique, we believe skincare shouldn't be about guesswork or chemical-heavy fillers. Modern skin is subjected to environmental stressors, Blue Light radiation, and harsh pollutants daily. Standard cosmetic fixes only offer temporary masking.</p>
+        <p>Our research laboratories partner with top dermatologists to design formulations centered on <strong>barrier health</strong>. By utilizing medical-grade ingredients in optimized concentrations, we trigger cellular renewal from the dermal layers upward.</p>
+        <p>We source clean, organic botanical concentrates like Centella Asiatica and Ferulic Acid to soothe skin redness, while clinical elements like Hyaluronic Acid, Ceramides, and Niacinamide restore structural moisture locking. It’s clinical effectiveness, designed with a luxury texture.</p>
+        <a href="shop.html" class="btn btn-primary" style="margin-top:1.5rem;">Explore Formulations</a>
+      </div>
+      
+      <div class="story-img-container fade-in" style="transition-delay: 0.2s;">
+        <div class="story-img-wrapper">
+          <img src="logo.png" alt="Glowique Science" class="science-graphic-logo">
+          <h3>Formulated For Efficacy</h3>
+          <p style="font-size:0.9rem; font-style:italic;">"Science-backed ingredients in bio-available vectors to guarantee penetration and maximum skin cell recovery."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INGREDIENTS SPOTLIGHT -->
+  <section class="section-padding ingredients-focus">
+    <div class="container">
+      <h2 class="fade-in">Ingredient Spotlight</h2>
+      <p style="text-align:center; max-width:600px; margin:-2rem auto 4rem; color:var(--color-charcoal-light);" class="fade-in">We are transparent about what goes on your face. Here are the core active compounds that make our routines effective.</p>
+      
+      <div class="ingredients-grid">
+        
+        <!-- Ingredient 1 -->
+        <div class="ingredient-card fade-in" style="transition-delay: 0.1s;">
+          <div class="ingredient-formula">HA</div>
+          <h3 class="ingredient-name">Hyaluronic Acid</h3>
+          <p>A powerful humectant that holds up to 1000x its weight in water. Deeply plumps the skin and eliminates dehydration micro-lines.</p>
+        </div>
+
+        <!-- Ingredient 2 -->
+        <div class="ingredient-card fade-in" style="transition-delay: 0.2s;">
+          <div class="ingredient-formula">B3</div>
+          <h3 class="ingredient-name">Niacinamide</h3>
+          <p>Vitamin B3 regulates excess sebum secretion, minimizes the appearance of pores, and strengthens the skin's lipid barrier.</p>
+        </div>
+
+        <!-- Ingredient 3 -->
+        <div class="ingredient-card fade-in" style="transition-delay: 0.3s;">
+          <div class="ingredient-formula">Vit C</div>
+          <h3 class="ingredient-name">L-Ascorbic Acid</h3>
+          <p>Pure Vitamin C, a potent antioxidant. Fades persistent pigmentation, brightens dull skin tones, and neutralizes free radicals.</p>
+        </div>
+
+        <!-- Ingredient 4 -->
+        <div class="ingredient-card fade-in" style="transition-delay: 0.4s;">
+          <div class="ingredient-formula">Cer</div>
+          <h3 class="ingredient-name">Ceramides</h3>
+          <p>Essential lipids that repair the outer skin barrier. Prevents transepidermal water loss and protects against pollutant irritation.</p>
+        </div>
+
+        <!-- Ingredient 5 -->
+        <div class="ingredient-card fade-in" style="transition-delay: 0.1s;">
+          <div class="ingredient-formula">Cica</div>
+          <h3 class="ingredient-name">Centella Asiatica</h3>
+          <p>A botanical powerhouse that accelerates wound healing, calms red inflamed skin, and builds cellular elasticity.</p>
+        </div>
+
+        <!-- Ingredient 6 -->
+        <div class="ingredient-card fade-in" style="transition-delay: 0.2s;">
+          <div class="ingredient-formula">AHA</div>
+          <h3 class="ingredient-name">Glycolic Acid</h3>
+          <p>Alpha hydroxy acid that gently melts intercellular glue, dissolving dead skin flakes to reveal fresh bright cells underneath.</p>
+        </div>
+
+        <!-- Ingredient 7 -->
+        <div class="ingredient-card fade-in" style="transition-delay: 0.3s;">
+          <div class="ingredient-formula">BHA</div>
+          <h3 class="ingredient-name">Salicylic Acid</h3>
+          <p>Oil-soluble beta hydroxy acid that penetrates deep inside pores to clear acne sebum plug, blackheads, and prevent flare-ups.</p>
+        </div>
+
+        <!-- Ingredient 8 -->
+        <div class="ingredient-card fade-in" style="transition-delay: 0.4s;">
+          <div class="ingredient-formula">Pep</div>
+          <h3 class="ingredient-name">Peptides</h3>
+          <p>Short-chain amino acids acting as cellular messengers, instructing skin to produce fresh collagen and reverse structural aging.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR COMMITMENT -->
+  <section class="container section-padding">
+    <h2 class="fade-in">Our Clean Commitments</h2>
+    <div class="commitments-grid">
+      
+      <div class="fade-in" style="transition-delay: 0.1s;">
+        <div class="commitment-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <h3 class="commitment-title">Dermatologist Tested</h3>
+        <p class="commitment-desc">All products go through strict patch testing in independent clinical labs to ensure compatibility on sensitive skin.</p>
+      </div>
+
+      <div class="fade-in" style="transition-delay: 0.2s;">
+        <div class="commitment-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        </div>
+        <h3 class="commitment-title">Cruelty Free</h3>
+        <p class="commitment-desc">We never test on animals at any stage of product development. Certified ethical testing values.</p>
+      </div>
+
+      <div class="fade-in" style="transition-delay: 0.3s;">
+        <div class="commitment-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3 class="commitment-title">Paraben & Sulfate Free</h3>
+        <p class="commitment-desc">Formulated without endocrine-disrupting chemicals, synthetic fillers, mineral oils, or stripping sulfates.</p>
+      </div>
+
+      <div class="fade-in" style="transition-delay: 0.4s;">
+        <div class="commitment-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12h10M12 12V2H2"/></svg>
+        </div>
+        <h3 class="commitment-title">100% Recyclable</h3>
+        <p class="commitment-desc">Our jars and dropper vials are manufactured from luxury weighted glass designed for simple curbside recycling.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CART OVERLAY & PANEL -->
+  <div class="cart-overlay">
+    <div class="cart-panel">
+      <div class="cart-header">
+        <h3>My Skincare Routine</h3>
+        <button class="cart-close-btn" aria-label="Close Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="cart-items-container">
+        <!-- Rendered by shared_script.js -->
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total-row">
+          <span>Subtotal</span>
+          <span id="cart-total-value">Rs. 0</span>
+        </div>
+        <button class="btn btn-secondary cart-checkout-btn" onclick="checkoutCart()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4-4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Order Routine on WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING WHATSAPP BUTTON -->
+  <a href="https://wa.me/918837741698?text=Hello%20Glowique!%20I%20have%20a%20skincare%20query%20and%20would%20like%20a%20dermatological%20consultation." target="_blank" class="whatsapp-float" aria-label="Chat on WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.793 1.451 5.48.002 9.938-4.438 9.941-9.923.001-2.656-1.03-5.153-2.903-7.03C16.586 1.777 14.09 .746 11.432.746 5.952.746 1.493 5.186 1.491 10.672c-.001 1.673.456 3.305 1.321 4.733l-.979 3.578 3.673-.96c1.5.819 3.018 1.25 4.542 1.251zm12.39-7.25c-.267-.134-1.586-.783-1.831-.873-.247-.089-.427-.134-.607.134-.18.269-.697.873-.854 1.05-.157.18-.314.202-.581.069-.267-.134-1.13-.417-2.153-1.331-.795-.709-1.332-1.584-1.488-1.853-.157-.269-.017-.414.118-.548.121-.12.267-.313.4-.469.134-.156.179-.268.268-.447.09-.179.045-.335-.022-.469-.067-.134-.607-1.46-.831-2.001-.219-.527-.459-.456-.607-.464-.157-.008-.337-.01-.517-.01-.18 0-.472.067-.719.336-.247.269-.944.923-.944 2.253s.966 2.613 1.101 2.793c.135.18 1.901 2.903 4.606 4.069.643.277 1.144.443 1.536.567.646.206 1.233.177 1.697.108.518-.077 1.586-.649 1.81-.1278.225-.63.225-1.168.157-1.257-.067-.09-.247-.135-.515-.269z"/></a >
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-about">
+        <a href="index.html" class="footer-logo">
+          <img src="logo.png" alt="Glowique Logo" style="height: 40px; width: 40px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(184, 123, 109, 0.4);">
+          <span class="logo-text" style="color: var(--color-white); margin-left: 0.5rem;">GLOWIQUE</span>
+        </a>
+        <p>Premium, dermatologist-backed skincare crafted for ultimate skin health. Experience medical-grade efficacy wrapped in clean beauty aesthetics.</p>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="Facebook">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" class="social-icon" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="#" class="social-icon" aria-label="Twitter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+          </a>
+        </div>
+      </div>
+      
+      <div>
+        <h3 class="footer-heading">Shop</h3>
+        <ul class="footer-links">
+          <li><a href="shop.html?category=Cleanser">Cleansers</a></li>
+          <li><a href="shop.html?category=Serum">Serums</a></li>
+          <li><a href="shop.html?category=Moisturizer">Moisturizers</a></li>
+          <li><a href="shop.html?category=Sunscreen">Sunscreens</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="footer-heading">Discover</h3>
+        <ul class="footer-links">
+          <li><a href="about.html">Our Philosophy</a></li>
+          <li><a href="quiz.html">Routine Finder Quiz</a></li>
+          <li><a href="about.html#science">Ingredient Science</a></li>
+          <li><a href="contact.html">Customer Care</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="footer-heading">Contact Info</h3>
+        <ul class="footer-contact">
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>+91 88377 41698</span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>hello@glowique.com</span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg>
+            <span>Chandigarh, India</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="container footer-bottom">
+      <p>&copy; 2026 Glowique Skincare. All rights reserved.</p>
+      <p>Clean science. Ultimate radiance.</p>
+    </div>
+  </footer>
+
+  <script src="shared_script.js"></script>
+</body>
+</html>
