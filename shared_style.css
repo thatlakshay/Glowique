@@ -107,7 +107,8 @@ a {
 }
 
 .section-padding {
-  padding: 8rem 0;
+  padding-top: 8rem;
+  padding-bottom: 8rem;
 }
 
 /* --- BUTTONS --- */
@@ -818,6 +819,13 @@ footer {
     text-align: center;
   }
   .section-padding {
-    padding: 5rem 0;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 1.25rem; /* ~20px padding left/right on tiny mobile screens */
   }
 }
